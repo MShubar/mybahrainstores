@@ -1,0 +1,15 @@
+{
+  "extends": "../../packages/config/tsconfig/react.json",
+  "compilerOptions": {
+    "composite": true,
+    "noEmit": true,
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.tsbuildinfo",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@convex/*": ["../../convex/*"]
+    }
+  },
+  "include": ["src", "vite.config.ts", "../../convex"],
+  "references": [{ "path": "../../packages/ui" }]
+}

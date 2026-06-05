@@ -1,0 +1,41 @@
+---
+description: Project architecture and stack rules
+alwaysApply: true
+---
+
+# Monorepo layout (ignore nested node_modules)
+
+```
+apps/
+├── website/     # Public marketing
+├── web-app/     # customer | store | backoffice dashboard
+└── mobile-app/  # Expo
+
+convex/          # Shared backend
+packages/
+├── config/      # tsconfig + tailwind presets
+├── types/       # Source of truth domain types
+├── validators/  # Zod schemas (auth, orders, products, settings, payments)
+├── utils/
+└── ui/
+```
+
+# Convex modules
+
+```
+convex/
+├── auth/ users/ stores/ categories/ products/
+├── orders/ payments/ analytics/ settings/ shared/
+```
+
+Each module: `queries.ts`, `mutations.ts`, `helpers.ts`, `validators.ts`, `permissions.ts`
+
+# Stack
+
+React, Vite, Expo, TailwindCSS, TypeScript, Convex, Convex Auth, Polar, Vercel, OpenAI, React Flow
+
+# Rules
+
+- `@my-bahrain/types` + `@my-bahrain/validators` prevent type drift across apps
+- Business values only in Convex `settings` — never hardcoded
+- `packages/constants` (future): routes, query keys, storage keys only

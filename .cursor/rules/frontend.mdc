@@ -1,0 +1,24 @@
+---
+description: Frontend coding standards
+alwaysApply: true
+---
+
+# Frontend Rules
+
+- Use TypeScript only
+- Use functional components
+- Use TailwindCSS
+- Use feature-based structure
+- Use reusable hooks
+- Use React Query for server state
+- Import domain types from `@my-bahrain/types`
+- Validate forms with schemas from `@my-bahrain/validators`
+- Use React Hook Form + Zod resolver
+
+# Forbidden
+
+- No inline business logic
+- No giant components
+- No hardcoded API URLs
+- No duplicated UI
+- No business constants (fees, statuses, limits) — use Convex settings

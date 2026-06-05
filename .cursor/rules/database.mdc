@@ -1,0 +1,17 @@
+---
+description: Database schema rules
+alwaysApply: true
+---
+
+# Database Rules
+
+- Schema lives in `convex/schema.ts`
+- Required tables: users, stores, categories, products, orders, payments, settings
+- Add `createdAt` and `updatedAt` on every document
+- Use indexes for lookup paths (email, slug, storeId, orderId)
+- Status strings are validated against settings — not hardcoded unions in schema
+
+# Forbidden
+
+- No business logic in schema definitions
+- No denormalized copies without a documented reason

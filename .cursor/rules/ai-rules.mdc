@@ -1,0 +1,15 @@
+---
+description: AI generation rules
+alwaysApply: true
+---
+
+# AI Rules
+
+- Generate production-ready code
+- Prefer reusable abstractions
+- Use strict TypeScript
+- Avoid placeholders
+- Avoid mock implementations unless requested
+- Keep files small and modular
+- Use `@my-bahrain/types` and `@my-bahrain/validators` as shared source of truth
+- Ignore nested `node_modules` — only the monorepo layout matters

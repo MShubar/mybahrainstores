@@ -1,0 +1,11 @@
+{
+  "extends": "../packages/config/tsconfig/node.json",
+  "compilerOptions": {
+    "skipLibCheck": true,
+    "noEmit": true,
+    "allowJs": true,
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx"
+  },
+  "include": ["./**/*"]
+}

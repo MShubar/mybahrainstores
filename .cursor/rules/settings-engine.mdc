@@ -1,0 +1,28 @@
+---
+description: Dynamic settings engine rules
+alwaysApply: true
+---
+
+# Settings Engine
+
+All configurable behavior MUST come from the `settings` table.
+
+# Examples
+
+- `order.statuses`
+- `commerce.delivery_fee`
+- `commerce.tax_percentage`
+- `commerce.currency`
+- `commerce.platform_commission`
+- `stores.require_approval`
+- `features.*` toggles
+
+# Implementation
+
+- Read via `settings/queries.getByKey`
+- Validate writes with `@my-bahrain/validators` settings schemas
+- Scope: `platform` or `store` (+ optional `storeId`)
+
+# Forbidden
+
+- No hardcoded statuses, fees, limits, or feature flags in apps or Convex handlers

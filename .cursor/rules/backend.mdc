@@ -1,0 +1,19 @@
+---
+description: Convex backend standards
+alwaysApply: true
+---
+
+# Backend Rules
+
+- Modular Convex domains: `auth/`, `users/`, `stores/`, `products/`, `orders/`, `payments/`, `settings/`, `shared/`
+- Each domain: `queries.ts`, `mutations.ts`, `helpers.ts`, `validators.ts`, `permissions.ts`
+- Validate inputs with `@my-bahrain/validators` (Zod) inside handlers
+- Centralize auth in `shared/permissions.ts`
+- Reuse helpers from `shared/helpers.ts`
+
+# Forbidden
+
+- No direct permission bypass
+- No hardcoded enums for business rules
+- No duplicated queries
+- No domain logic in `schema.ts` beyond table definitions

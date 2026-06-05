@@ -1,0 +1,25 @@
+{
+  "expo": {
+    "name": "My Bahrain",
+    "slug": "my-bahrain-mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "mybahrain",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.mybahrain.app"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#0284c7"
+      },
+      "package": "com.mybahrain.app"
+    },
+    "plugins": ["expo-router"],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}

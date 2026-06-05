@@ -1,0 +1,14 @@
+{
+  "files": [],
+  "references": [
+    { "path": "./packages/config" },
+    { "path": "./packages/types" },
+    { "path": "./packages/utils" },
+    { "path": "./packages/validators" },
+    { "path": "./packages/ui" },
+    { "path": "./apps/website" },
+    { "path": "./apps/web-app" },
+    { "path": "./apps/mobile-app" },
+    { "path": "./convex" }
+  ]
+}
