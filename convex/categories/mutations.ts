@@ -4,6 +4,22 @@ import { ConvexError, v } from "convex/values";
 import { requireCurrentUser } from "../auth/currentUser";
 import { requireBackoffice } from "../auth/permissions";
 import { recordAuditLog } from "../auditLogs/helpers";
+import { seedDefaultCategoriesRecords } from "./helpers";
+
+/**
+ * Inserts default marketplace categories from `defaults.ts`.
+ * Idempotent: existing slugs are skipped.
+ * Run once from the Convex dashboard (Functions → categories/mutations → seedDefaultCategories).
+ */
+export const seedDefaultCategories = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const user = await requireCurrentUser(ctx);
+    requireBackoffice(user);
+
+    return await seedDefaultCategoriesRecords(ctx);
+  },
+});
 
 export const createCategory = mutation({
   args: {

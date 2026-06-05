@@ -21,6 +21,7 @@ import type * as auth_helpers from "../auth/helpers.js";
 import type * as auth_permission from "../auth/permission.js";
 import type * as auth_permissions from "../auth/permissions.js";
 import type * as auth_validators from "../auth/validators.js";
+import type * as categories_defaults from "../categories/defaults.js";
 import type * as categories_helpers from "../categories/helpers.js";
 import type * as categories_mutations from "../categories/mutations.js";
 import type * as categories_permissions from "../categories/permissions.js";
@@ -93,6 +94,7 @@ declare const fullApi: ApiFromModules<{
   "auth/permission": typeof auth_permission;
   "auth/permissions": typeof auth_permissions;
   "auth/validators": typeof auth_validators;
+  "categories/defaults": typeof categories_defaults;
   "categories/helpers": typeof categories_helpers;
   "categories/mutations": typeof categories_mutations;
   "categories/permissions": typeof categories_permissions;
