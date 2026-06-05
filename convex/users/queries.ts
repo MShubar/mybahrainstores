@@ -1,6 +1,8 @@
 import { getAuthUserId } from "@convex-dev/auth/server";
 import { internalQuery, query } from "../_generated/server";
 import { v } from "convex/values";
+import { requireCurrentUser } from "../auth/currentUser";
+import { requireBackoffice } from "../auth/permissions";
 
 export const me = query({
   args: {},
@@ -11,6 +13,16 @@ export const me = query({
     }
 
     return await ctx.db.get(userId);
+  },
+});
+
+export const listBackofficeUsers = query({
+  args: {},
+  handler: async (ctx) => {
+    const user = await requireCurrentUser(ctx);
+    requireBackoffice(user);
+
+    return await ctx.db.query("users").collect();
   },
 });
 

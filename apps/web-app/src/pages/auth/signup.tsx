@@ -28,15 +28,11 @@ export function SignupPage() {
     setLoading(true);
 
     try {
-      console.log("Signing up...");
-
       await signIn("password", {
         email,
         password,
         flow: "signUp",
       });
-
-      console.log("Creating profile...");
 
       const userId = await createProfile({
         name,

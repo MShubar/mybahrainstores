@@ -22,6 +22,7 @@ Set in Vercel project settings or `apps/website/.env.local` for local dev.
 | Variable | Required | Description |
 |----------|----------|-------------|
 | `VITE_CONVEX_URL` | Yes | Convex deployment URL |
+| `VITE_WEB_APP_URL` | Yes | Web app URL for login/signup links |
 
 ---
 

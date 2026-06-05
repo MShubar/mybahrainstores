@@ -9,6 +9,7 @@ import {
 import { getSettingValue } from "../settings/helpers";
 import { enforceRateLimit } from "../rateLimit/helpers";
 import { recordAuditLog } from "../auditLogs/helpers";
+import { internal } from "../_generated/api";
 
 export const createOrder = mutation({
   args: {
@@ -157,6 +158,25 @@ paymentStatus,
       }
     }
 
+    await ctx.scheduler.runAfter(0, internal.pushNotifications.actions.notifyUser, {
+      userId: store.ownerId,
+      title: "New order received",
+      body: `Order #${orderId.slice(-6)} — ${totalAmount.toFixed(3)} ${currency}`,
+    });
+
+    await ctx.scheduler.runAfter(
+      0,
+      internal.notifications.mutations.createNotification,
+      {
+        userId: store.ownerId,
+        title: "New order received",
+        message: `Order #${orderId.slice(-6)} — ${totalAmount.toFixed(3)} ${currency}`,
+        type: "order_created",
+        entityType: "order",
+        entityId: orderId,
+      },
+    );
+
     return orderId;
   },
 });
@@ -190,6 +210,25 @@ export const updateOrderStatus = mutation({
       storeNotes: args.storeNotes,
       updatedAt: Date.now(),
     });
+
+    await ctx.scheduler.runAfter(0, internal.pushNotifications.actions.notifyUser, {
+      userId: order.customerId,
+      title: "Order status updated",
+      body: `Your order is now ${args.orderStatus}`,
+    });
+
+    await ctx.scheduler.runAfter(
+      0,
+      internal.notifications.mutations.createNotification,
+      {
+        userId: order.customerId,
+        title: "Order status updated",
+        message: `Your order is now ${args.orderStatus}`,
+        type: "order_status_updated",
+        entityType: "order",
+        entityId: args.orderId,
+      },
+    );
 
     return args.orderId;
   },

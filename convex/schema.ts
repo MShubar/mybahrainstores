@@ -284,4 +284,14 @@ export default defineSchema({
     .index("by_event", ["event"])
     .index("by_user", ["userId"])
     .index("by_entity", ["entityType", "entityId"]),
+
+  pushTokens: defineTable({
+    userId: v.id("users"),
+    token: v.string(),
+    platform: v.string(),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_user", ["userId"])
+    .index("by_token", ["token"]),
 });

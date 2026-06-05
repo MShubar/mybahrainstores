@@ -1,7 +1,10 @@
 import { ReactNode } from "react";
 import { Link } from "react-router-dom";
+import { getWebAppUrl } from "../lib/web-app-url";
 
 export function WebsiteLayout({ children }: { children: ReactNode }) {
+  const webAppUrl = getWebAppUrl();
+
   return (
     <div className="min-h-screen bg-white">
       <header className="border-b">
@@ -16,14 +19,14 @@ export function WebsiteLayout({ children }: { children: ReactNode }) {
             <Link to="/categories">Categories</Link>
 
             <a
-              href="http://localhost:5173/login"
+              href={`${webAppUrl}/login`}
               className="rounded border px-4 py-2"
             >
               Login
             </a>
 
             <a
-              href="http://localhost:5173/signup"
+              href={`${webAppUrl}/signup`}
               className="rounded bg-black px-4 py-2 text-white"
             >
               Sign Up

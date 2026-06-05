@@ -4,8 +4,10 @@ import { useMutation, useQuery } from "convex/react";
 import { api } from "@convex/_generated/api";
 import type { Id } from "@convex/_generated/dataModel";
 import { SEO } from "../components/seo";
+import { getWebAppUrl } from "../lib/web-app-url";
 
 export function StoreDetailPage() {
+  const webAppUrl = getWebAppUrl();
   const { storeId } = useParams();
   const trackEvent = useMutation(api.analytics.mutations.trackEvent);
   const trackedStoreId = useRef<string | null>(null);
@@ -147,7 +149,7 @@ export function StoreDetailPage() {
                 </div>
 
                 <a
-                  href="http://localhost:5173/signup"
+                  href={`${webAppUrl}/signup`}
                   className="mt-4 inline-block w-full rounded bg-black px-4 py-2 text-center text-white"
                 >
                   Order in App

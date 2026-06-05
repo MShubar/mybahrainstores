@@ -2,9 +2,19 @@
   "extends": "../../packages/config/tsconfig/react-native.json",
   "compilerOptions": {
     "strict": true,
+    "moduleResolution": "bundler",
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@convex/*": ["../../convex/*"],
+      "@my-bahrain/types": ["../../packages/types/src/index.ts"],
+      "@my-bahrain/validators": ["../../packages/validators/src/index.ts"]
     }
   },
-  "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"]
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    ".expo/types/**/*.ts",
+    "expo-env.d.ts",
+    "../../convex"
+  ]
 }

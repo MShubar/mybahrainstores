@@ -13,9 +13,13 @@
     "ios": "expo start --ios"
   },
   "dependencies": {
+    "@convex-dev/auth": "^0.0.93",
     "@my-bahrain/types": "workspace:*",
     "@my-bahrain/utils": "workspace:*",
+    "convex": "^1.21.0",
     "expo": "~52.0.28",
+    "expo-device": "^56.0.4",
+    "expo-notifications": "^56.0.15",
     "expo-router": "~4.0.17",
     "expo-status-bar": "~2.0.1",
     "react": "18.3.1",

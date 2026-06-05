@@ -22,7 +22,7 @@ function getHeader(
 
 function headersToRecord(headers: Headers): Record<string, string> {
   const record: Record<string, string> = {};
-  headers.forEach((value, key) => {
+  headers.forEach((value: string, key: string) => {
     record[key] = value;
   });
   return record;

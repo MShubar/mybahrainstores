@@ -7,6 +7,7 @@ export function BackofficeLayout({ children }: { children: ReactNode }) {
     { label: "Dashboard", to: "/backoffice" },
     { label: "Categories", to: "/backoffice/categories" },
     { label: "Stores", to: "/backoffice/stores" },
+    { label: "Products", to: "/backoffice/products" },
     { label: "Settings", to: "/backoffice/settings" },
     { label: "Users", to: "/backoffice/users" },
     { label: "Orders", to: "/backoffice/orders" },

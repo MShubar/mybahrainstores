@@ -11,6 +11,7 @@ import {
 } from "./helpers";
 import { requireStoreOwner } from "./permissions";
 import { recordAuditLog } from "../auditLogs/helpers";
+import { internal } from "../_generated/api";
 
 const storeFields = {
   name: v.string(),
@@ -126,6 +127,19 @@ export const approveStore = mutation({
       before: { isApproved: store.isApproved, isActive: store.isActive },
       after: { isApproved: true, isActive: true },
     });
+
+    await ctx.scheduler.runAfter(
+      0,
+      internal.notifications.mutations.createNotification,
+      {
+        userId: store.ownerId,
+        title: "Store approved",
+        message: `${store.name} is now live on the platform.`,
+        type: "store_approved",
+        entityType: "store",
+        entityId: args.storeId,
+      },
+    );
   },
 });
 

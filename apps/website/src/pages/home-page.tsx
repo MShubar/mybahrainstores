@@ -1,6 +1,9 @@
 import { SEO } from "../components/seo";
+import { getWebAppUrl } from "../lib/web-app-url";
 
 export function HomePage() {
+    const webAppUrl = getWebAppUrl();
+
     return (
       <main>
         <SEO
@@ -19,7 +22,7 @@ export function HomePage() {
   
           <div className="mt-8 flex justify-center gap-3">
             <a
-              href="http://localhost:5173/signup"
+              href={`${webAppUrl}/signup`}
               className="rounded bg-black px-6 py-3 text-white"
             >
               Get Started

@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ProtectedRoute } from "./components/auth/protected-route";
 import { UnauthorizedPage } from "./pages/unauthorized";
 import { SignupPage } from "./pages/auth/signup";
+import { LoginPage } from "./pages/auth/login";
 import { DashboardLayout } from "./layouts/dashboard-layout";
 import { BackofficeLayout } from "./layouts/backoffice/backoffice-layout";
 import { BackofficeDashboardPage } from "./pages/backoffice/dashboard";
@@ -23,21 +24,8 @@ import { NotificationsPage } from "./features/notifications/pages/notifications-
 import { BackofficeAuditLogsPage } from "./features/audit-logs/pages/backoffice-audit-logs-page";
 import { BackofficeAnalyticsPage } from "./features/analytics/pages/backoffice-analytics-page";
 import { BackofficeMonitoringPage } from "./features/monitoring/pages/backoffice-monitoring-page";
-function CustomerDashboard() {
-  return <div>Customer Dashboard</div>;
-}
-
-function StoreDashboard() {
-  return <div>Store Dashboard</div>;
-}
-
-function BackofficeDashboard() {
-  return <div>Backoffice Dashboard</div>;
-}
-
-function LoginPage() {
-  return <div>Login Page</div>;
-}
+import { BackofficeUsersPage } from "./features/users/pages/backoffice-users-page";
+import { BackofficeProductsPage } from "./features/products/pages/backoffice-products-page";
 
 export default function App() {
   return (
@@ -187,6 +175,26 @@ export default function App() {
             <ProtectedRoute allowedRoles={["backoffice"]}>
               <BackofficeLayout>
                 <BackofficeStoresPage />
+              </BackofficeLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/backoffice/products"
+          element={
+            <ProtectedRoute allowedRoles={["backoffice"]}>
+              <BackofficeLayout>
+                <BackofficeProductsPage />
+              </BackofficeLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/backoffice/users"
+          element={
+            <ProtectedRoute allowedRoles={["backoffice"]}>
+              <BackofficeLayout>
+                <BackofficeUsersPage />
               </BackofficeLayout>
             </ProtectedRoute>
           }
