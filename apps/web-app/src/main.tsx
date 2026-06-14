@@ -4,6 +4,7 @@ import { ConvexReactClient } from "convex/react";
 import { ConvexAuthProvider } from "@convex-dev/auth/react";
 import { requireEnv } from "@my-bahrain/config";
 import { CartProvider } from "./features/cart/cart-store";
+import { FlyToCartProvider } from "./features/cart/fly-to-cart";
 import App from "./app";
 import "./index.css";
 import { ErrorBoundaryWithLogging } from "./components/errors/error-boundary-with-logging";
@@ -19,7 +20,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       <ClientErrorReporter />
       <ErrorBoundaryWithLogging>
         <CartProvider>
-          <App />
+          <FlyToCartProvider>
+            <App />
+          </FlyToCartProvider>
         </CartProvider>
       </ErrorBoundaryWithLogging>
     </ConvexAuthProvider>

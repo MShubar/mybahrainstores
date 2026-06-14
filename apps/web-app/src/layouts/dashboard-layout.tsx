@@ -1,6 +1,8 @@
 import { ReactNode } from "react";
 import { LogoutButton } from "../features/auth/components/logout-button";
+import { DemoAccountBanner } from "../features/demo/components/demo-account-banner";
 import { Link } from "react-router-dom";
+
 export function DashboardLayout({ children }: { children: ReactNode }) {
   return (
     <div className="flex min-h-screen">
@@ -24,11 +26,27 @@ export function DashboardLayout({ children }: { children: ReactNode }) {
     <Link to="/customer/orders">Orders</Link>
     <Link to="/customer/cart">Cart</Link>
     <Link to="/store/orders">Orders</Link>
+    <Link
+      to="/store/analytics"
+      className="block rounded px-3 py-2 hover:bg-gray-100"
+    >
+      Analytics
+    </Link>
+    <Link
+      to="/store/payout-settings"
+      className="block rounded px-3 py-2 hover:bg-gray-100"
+    >
+      Payout Information
+    </Link>
   </nav>
 </aside>
 
       <main className="flex-1">
-        <header className="flex justify-end border-b p-4">
+        <DemoAccountBanner />
+        <header className="flex items-center justify-end gap-3 border-b p-4">
+          <Link to="/account" className="text-sm underline">
+            Account
+          </Link>
           <LogoutButton />
         </header>
 

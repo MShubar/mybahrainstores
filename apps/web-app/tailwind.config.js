@@ -5,7 +5,16 @@ export default {
   content: ["./index.html", "./src/**/*.{ts,tsx}", "../../packages/ui/src/**/*.{ts,tsx}"],
   presets: [preset],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        brand: {
+          primary: "#FF5A00",
+          secondary: "#7E3AF2",
+          surface: "#F7F7F7",
+          gold: "#D4AF37",
+        },
+      },
+    },
   },
   plugins: [],
 };

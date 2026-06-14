@@ -18,7 +18,7 @@ export function CartPage() {
             to="/customer"
             className="mt-4 inline-block rounded bg-black px-4 py-2 text-white"
           >
-            Browse stores
+            Browse products
           </Link>
         </div>
       )}

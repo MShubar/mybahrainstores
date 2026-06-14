@@ -1,8 +1,9 @@
-import { FormEvent, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { FormEvent, useState, type ReactNode } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { useAction, useMutation, useQuery } from "convex/react";
 import { api } from "@convex/_generated/api";
 import type { Id } from "@convex/_generated/dataModel";
+import { PageHeader } from "../../customer/components/page-header";
 import { OrderTrackingTimeline } from "../components/order-tracking-timeline";
 import {
     ORDER_STATUS_STEPS,
@@ -12,6 +13,7 @@ import { useTrackEvent } from "../../analytics/hooks/use-track-event";
 
 export function CustomerOrderDetailsPage() {
     const { orderId } = useParams();
+    const navigate = useNavigate();
     const createTapCharge = useAction(api.payments.actions.createTapCharge);
     const completeMockPayment = useMutation(api.payments.mutations.completeMockPayment);
     const trackEvent = useTrackEvent();
@@ -47,8 +49,7 @@ export function CustomerOrderDetailsPage() {
         return <div>Order not found.</div>;
     }
 
-    const { order, store, paymentSteps, orderSteps, isCancelled, isDelivered } =
-        tracking;
+    const { order, paymentSteps, orderSteps, isCancelled, isDelivered } = tracking;
     const currentIndex = getOrderStatusIndex(order.orderStatus);
 
     const pendingStatus =
@@ -84,27 +85,17 @@ export function CustomerOrderDetailsPage() {
     }
 
     return (
-        <div className="space-y-6">
-            <div>
-                <Link
-                    to="/customer/orders"
-                    className="text-sm text-gray-600 hover:text-gray-900"
-                >
-                    ← Back to my orders
-                </Link>
-            </div>
+        <div className="space-y-6 pb-6">
+            <PageHeader
+                title={`Order #${order._id.slice(-6)}`}
+                subtitle={`Placed ${new Date(order.createdAt).toLocaleString()}`}
+                onBack={() => navigate("/customer/orders")}
+            />
 
             <div className="rounded-xl border bg-white p-5">
                 <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
                     <div>
-                        <p className="text-sm text-gray-500">
-                            {store?.name ?? "Store"}
-                        </p>
-                        <h1 className="text-3xl font-bold">
-                            Order #{order._id.slice(-6)}
-                        </h1>
-
-                        <div className="mt-2 flex flex-wrap gap-2">
+                        <div className="flex flex-wrap gap-2">
                             <span
                                 className={`rounded px-2 py-1 text-xs ${isCancelled
                                         ? "bg-red-100 text-red-700"
@@ -128,11 +119,8 @@ export function CustomerOrderDetailsPage() {
                             </span>
                         </div>
 
-                        <p className="mt-2 text-sm text-gray-500">
-                            Placed {new Date(order.createdAt).toLocaleString()}
-                        </p>
                         {order.updatedAt !== order.createdAt && (
-                            <p className="text-sm text-gray-500">
+                            <p className="mt-2 text-sm text-gray-500">
                                 Updated {new Date(order.updatedAt).toLocaleString()}
                             </p>
                         )}
@@ -321,7 +309,7 @@ export function CustomerOrderDetailsPage() {
 
             {order.storeNotes && (
                 <div className="rounded-xl border bg-white p-5">
-                    <h2 className="text-xl font-bold">Message from store</h2>
+                    <h2 className="text-xl font-bold">Seller note</h2>
                     <p className="mt-3 text-gray-700">{order.storeNotes}</p>
                 </div>
             )}

@@ -92,7 +92,20 @@ export const getMyStoreRevenueStats = query({
         .collect();
   
       const paidOrders = orders.filter((order) => order.paymentStatus === "paid");
-  
+
+      const grossRevenue = paidOrders.reduce(
+        (sum, order) => sum + order.totalAmount,
+        0,
+      );
+      const commissionPaid = paidOrders.reduce(
+        (sum, order) => sum + (order.commissionAmount ?? 0),
+        0,
+      );
+      const netEarnings = paidOrders.reduce(
+        (sum, order) => sum + (order.storeAmount ?? order.totalAmount),
+        0,
+      );
+
       return {
         store,
         totalOrders: orders.length,
@@ -101,7 +114,10 @@ export const getMyStoreRevenueStats = query({
           .length,
         deliveredOrders: orders.filter((order) => order.orderStatus === "delivered")
           .length,
-        totalRevenue: paidOrders.reduce((sum, order) => sum + order.totalAmount, 0),
+        totalRevenue: grossRevenue,
+        grossRevenue,
+        commissionPaid,
+        netEarnings,
       };
     },
   });

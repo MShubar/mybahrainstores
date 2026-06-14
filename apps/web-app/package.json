@@ -9,12 +9,15 @@
     "preview": "vite preview",
     "typecheck": "tsc -b",
     "lint": "tsc -b",
+    "test": "node -e \"process.exit(0)\"",
     "test": "node -e \"process.exit(0)\""
   },
   "dependencies": {
     "@convex-dev/auth": "^0.0.93",
+    "@my-bahrain/content": "workspace:*",
     "@my-bahrain/types": "workspace:*",
     "@my-bahrain/ui": "workspace:*",
+    "@my-bahrain/utils": "workspace:*",
     "@my-bahrain/validators": "workspace:*",
     "@tanstack/react-query": "^5.66.0",
     "convex": "^1.21.0",

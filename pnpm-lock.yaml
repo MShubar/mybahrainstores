@@ -14,9 +14,15 @@ importers:
       '@convex-dev/auth':
         specifier: ^0.0.93
         version: 0.0.93(@auth/core@0.37.0)(convex@1.40.0(react@18.3.1))(react@18.3.1)
+      '@oslojs/crypto':
+        specifier: ^1.0.1
+        version: 1.0.1
       '@polar-sh/sdk':
         specifier: ^0.47.1
         version: 0.47.1
+      resend:
+        specifier: ^6.12.4
+        version: 6.12.4
     devDependencies:
       '@types/node':
         specifier: ^25.9.1
@@ -97,12 +103,18 @@ importers:
       '@convex-dev/auth':
         specifier: ^0.0.93
         version: 0.0.93(@auth/core@0.37.0)(convex@1.40.0(react@18.3.1))(react@18.3.1)
+      '@my-bahrain/content':
+        specifier: workspace:*
+        version: link:../../packages/content
       '@my-bahrain/types':
         specifier: workspace:*
         version: link:../../packages/types
       '@my-bahrain/ui':
         specifier: workspace:*
         version: link:../../packages/ui
+      '@my-bahrain/utils':
+        specifier: workspace:*
+        version: link:../../packages/utils
       '@my-bahrain/validators':
         specifier: workspace:*
         version: link:../../packages/validators
@@ -241,6 +253,15 @@ importers:
       tailwindcss:
         specifier: ^3.4.17
         version: 3.4.19
+      typescript:
+        specifier: ^5.7.3
+        version: 5.9.3
+
+  packages/content:
+    devDependencies:
+      '@my-bahrain/config':
+        specifier: workspace:*
+        version: link:../config
       typescript:
         specifier: ^5.7.3
         version: 5.9.3
@@ -1371,7 +1392,7 @@ packages:
 
   '@expo/bunyan@4.0.1':
     resolution: {integrity: sha512-+Lla7nYSiHZirgK+U/uYzsLv/X+HaJienbD5AKX1UQZHYfWaP+9uuQluRB4GrEVWF0GZ7vEVp/jzaOT9k/SQlg==}
-    engines: {node: '>=0.10.0'}
+    engines: {'0': node >=0.10.0}
 
   '@expo/cli@0.22.28':
     resolution: {integrity: sha512-lvt72KNitGuixYD2l3SZmRKVu2G4zJpmg5V7WfUBNpmUU5oODBw/6qmiJ6kSLAlfDozscUk+BBGknBBzxUrwrA==}
@@ -3772,6 +3793,9 @@ packages:
     resolution: {integrity: sha512-NCrCHhWmnQklfH4MtJMRjZ2a8c80qXeMlQMv2uVp9ISJMTt562SbGd6n2oq0PaPgKm7Z6pL9E2UlLIhC+SHL3w==}
     engines: {node: '>=4.0.0'}
 
+  postal-mime@2.7.4:
+    resolution: {integrity: sha512-0WdnFQYUrPGGTFu1uOqD2s7omwua8xaeYGdO6rb88oD5yJ/4pPHDA4sdWqfD8wQVfCny563n/HQS7zTFft+f/g==}
+
   postcss-import@15.1.0:
     resolution: {integrity: sha512-hpr+J05B2FVYUAXHeK1YyI267J/dDDhMU6B6civm8hSY1jYJnBXxzKDKDswzJmtLHryrjhnDjqqp/49t8FALew==}
     engines: {node: '>=14.0.0'}
@@ -4053,6 +4077,15 @@ packages:
   requireg@0.2.2:
     resolution: {integrity: sha512-nYzyjnFcPNGR3lx9lwPPPnuQxv6JWEZd2Ci0u9opN7N5zUEPIhY/GbL3vMGOr2UXwEg9WwSyV9X9Y/kLFgPsOg==}
     engines: {node: '>= 4.0.0'}
+
+  resend@6.12.4:
+    resolution: {integrity: sha512-lRpJ2Hxd+ht+JPDm97juRcUp9HOMuZyxaRFRFmc9Tx8iNWiei94Dx9v6SWufgKk2667C/uCeKKspMotOHSpCSg==}
+    engines: {node: '>=20'}
+    peerDependencies:
+      '@react-email/render': '*'
+    peerDependenciesMeta:
+      '@react-email/render':
+        optional: true
 
   resolve-from@3.0.0:
     resolution: {integrity: sha512-GnlH6vxLymXJNMBo7XP1fJIzBFbdYt49CuTwmB/6N53t+kMPRMFKz783LlQ4tv28XoQfMWinAJX6WCGf2IlaIw==}
@@ -8712,6 +8745,8 @@ snapshots:
 
   pngjs@3.4.0: {}
 
+  postal-mime@2.7.4: {}
+
   postcss-import@15.1.0(postcss@8.5.15):
     dependencies:
       postcss: 8.5.15
@@ -9032,6 +9067,11 @@ snapshots:
       nested-error-stacks: 2.0.1
       rc: 1.2.8
       resolve: 1.7.1
+
+  resend@6.12.4:
+    dependencies:
+      postal-mime: 2.7.4
+      standardwebhooks: 1.0.0
 
   resolve-from@3.0.0: {}
 

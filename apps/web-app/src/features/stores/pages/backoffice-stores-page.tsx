@@ -9,6 +9,9 @@ export function BackofficeStoresPage() {
   const approveStore = useMutation(api.stores.mutations.approveStore);
   const rejectStore = useMutation(api.stores.mutations.rejectStore);
   const toggleStoreActive = useMutation(api.stores.mutations.toggleStoreActive);
+  const updateStoreCommissionRate = useMutation(
+    api.stores.mutations.updateStoreCommissionRate,
+  );
   const trackEvent = useTrackEvent();
 
   if (stores === undefined) {
@@ -31,6 +34,23 @@ export function BackofficeStoresPage() {
     await toggleStoreActive({ storeId, isActive });
   }
 
+  async function onCommissionChange(
+    storeId: Id<"stores">,
+    value: string,
+  ) {
+    if (value === "default") {
+      await updateStoreCommissionRate({ storeId, commissionRate: null });
+      return;
+    }
+
+    const rate = Number(value);
+    if (!Number.isFinite(rate)) {
+      return;
+    }
+
+    await updateStoreCommissionRate({ storeId, commissionRate: rate });
+  }
+
   return (
     <div className="space-y-6">
       <div>
@@ -50,6 +70,7 @@ export function BackofficeStoresPage() {
               <th className="p-3">Approved</th>
               <th className="p-3">Active</th>
               <th className="p-3">Open</th>
+              <th className="p-3">Commission</th>
               <th className="p-3 text-right">Actions</th>
             </tr>
           </thead>
@@ -57,7 +78,7 @@ export function BackofficeStoresPage() {
           <tbody>
             {stores.length === 0 && (
               <tr>
-                <td className="p-4 text-gray-500" colSpan={7}>
+                <td className="p-4 text-gray-500" colSpan={8}>
                   No stores yet.
                 </td>
               </tr>
@@ -108,6 +129,26 @@ export function BackofficeStoresPage() {
                   >
                     {store.isOpen ? "Open" : "Closed"}
                   </span>
+                </td>
+
+                <td className="p-3">
+                  <select
+                    className="rounded border px-2 py-1"
+                    value={
+                      store.commissionRate !== undefined
+                        ? String(store.commissionRate)
+                        : "default"
+                    }
+                    onChange={(event) =>
+                      void onCommissionChange(store._id, event.target.value)
+                    }
+                  >
+                    <option value="default">Default</option>
+                    <option value="5">5%</option>
+                    <option value="10">10%</option>
+                    <option value="15">15%</option>
+                    <option value="20">20%</option>
+                  </select>
                 </td>
 
                 <td className="space-x-2 p-3 text-right">

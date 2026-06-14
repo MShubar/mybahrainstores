@@ -4,6 +4,8 @@ import { ConvexError, v } from "convex/values";
 import { requireCurrentUser } from "../auth/currentUser";
 import { requireBackoffice } from "../auth/permissions";
 import { recordAuditLog } from "../auditLogs/helpers";
+import { deleteUserAccount } from "./deleteAccountHelpers";
+import { assertNotSelf, now } from "./helpers";
 
 export const createCurrentUserProfile = mutation({
   args: {
@@ -55,6 +57,54 @@ export const createCurrentUserProfile = mutation({
 
     await ctx.db.patch(userId, profile);
     return userId;
+  },
+});
+
+export const deleteCurrentUserAccount = mutation({
+  args: {
+    confirmPhrase: v.literal("DELETE"),
+  },
+  handler: async (ctx) => {
+    const user = await requireCurrentUser(ctx);
+    await deleteUserAccount(ctx, user);
+
+    await recordAuditLog(ctx, {
+      actorId: user._id,
+      action: "user_account_deleted",
+      entity: "users",
+      entityId: user._id,
+      before: { email: user.email, role: user.role },
+      after: { deletedAt: now() },
+    });
+  },
+});
+
+export const deleteUserAccountByAdmin = mutation({
+  args: {
+    userId: v.id("users"),
+    confirmPhrase: v.literal("DELETE"),
+  },
+  handler: async (ctx, args) => {
+    const actor = await requireCurrentUser(ctx);
+    requireBackoffice(actor);
+
+    const user = await ctx.db.get(args.userId);
+    if (!user) {
+      throw new ConvexError("User not found");
+    }
+
+    assertNotSelf(actor._id, args.userId, "You cannot delete your own account from the admin panel");
+
+    await deleteUserAccount(ctx, user);
+
+    await recordAuditLog(ctx, {
+      actorId: actor._id,
+      action: "user_account_deleted_by_admin",
+      entity: "users",
+      entityId: args.userId,
+      before: { email: user.email, role: user.role },
+      after: { deletedAt: now() },
+    });
   },
 });
 

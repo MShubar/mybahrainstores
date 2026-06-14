@@ -3,6 +3,7 @@ import { internalQuery, query } from "../_generated/server";
 import { v } from "convex/values";
 import { requireCurrentUser } from "../auth/currentUser";
 import { requireBackoffice } from "../auth/permissions";
+import { getAccountDeletionBlockers } from "./deleteAccountHelpers";
 
 export const me = query({
   args: {},
@@ -13,6 +14,21 @@ export const me = query({
     }
 
     return await ctx.db.get(userId);
+  },
+});
+
+export const getAccountDeletionStatus = query({
+  args: {},
+  handler: async (ctx) => {
+    const user = await requireCurrentUser(ctx);
+    const blockers = await getAccountDeletionBlockers(ctx, user);
+
+    return {
+      email: user.email ?? null,
+      role: user.role ?? null,
+      deletedAt: user.deletedAt ?? null,
+      ...blockers,
+    };
   },
 });
 

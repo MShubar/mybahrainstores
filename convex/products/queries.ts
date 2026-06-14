@@ -7,6 +7,51 @@ import { getAuthenticatedUser } from "../shared/permissions";
 import { isPublicProduct } from "./helpers";
 import { isPublicStore } from "../stores/helpers";
 
+export const listPublicProducts = query({
+  args: {
+    categoryId: v.optional(v.id("categories")),
+    limit: v.optional(v.number()),
+  },
+  handler: async (ctx, args) => {
+    const limit = args.limit ?? 120;
+
+    const products = await ctx.db
+      .query("products")
+      .filter((q) =>
+        q.and(
+          q.eq(q.field("isActive"), true),
+          q.eq(q.field("isAvailable"), true),
+        ),
+      )
+      .collect();
+
+    const results = [];
+
+    for (const product of products) {
+      if (args.categoryId && product.categoryId !== args.categoryId) {
+        continue;
+      }
+
+      const store = await ctx.db.get(product.storeId);
+
+      if (!store || !isPublicStore(store)) {
+        continue;
+      }
+
+      results.push({
+        ...product,
+        storeName: store.name,
+      });
+
+      if (results.length >= limit) {
+        break;
+      }
+    }
+
+    return results;
+  },
+});
+
 export const listPublicByStore = query({
   args: {
     storeId: v.id("stores"),
@@ -82,14 +127,43 @@ export const getById = query({
     const user = await getAuthenticatedUser(ctx);
 
     if (user?.role === "backoffice") {
-      return product;
+      const category = product.categoryId
+        ? await ctx.db.get(product.categoryId)
+        : null;
+
+      return {
+        ...product,
+        storeName: store.name,
+        categoryName: category?.name ?? null,
+        categorySlug: category?.slug ?? null,
+      };
     }
 
     if (user?.role === "store" && store.ownerId === user._id) {
-      return product;
+      const category = product.categoryId
+        ? await ctx.db.get(product.categoryId)
+        : null;
+
+      return {
+        ...product,
+        storeName: store.name,
+        categoryName: category?.name ?? null,
+        categorySlug: category?.slug ?? null,
+      };
     }
 
-    return isPublicStore(store) && isPublicProduct(product) ? product : null;
+    const category = product.categoryId
+      ? await ctx.db.get(product.categoryId)
+      : null;
+
+    return isPublicStore(store) && isPublicProduct(product)
+      ? {
+          ...product,
+          storeName: store.name,
+          categoryName: category?.name ?? null,
+          categorySlug: category?.slug ?? null,
+        }
+      : null;
   },
 });
 
@@ -116,7 +190,16 @@ export const getByStoreAndSlug = query({
       return null;
     }
 
-    return product;
+    const category = product.categoryId
+      ? await ctx.db.get(product.categoryId)
+      : null;
+
+    return {
+      ...product,
+      storeName: store.name,
+      categoryName: category?.name ?? null,
+      categorySlug: category?.slug ?? null,
+    };
   },
 });
 

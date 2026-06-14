@@ -20,6 +20,7 @@ export default defineSchema({
       v.union(v.literal("customer"), v.literal("store"), v.literal("backoffice")),
     ),
     isActive: v.optional(v.boolean()),
+    deletedAt: v.optional(v.number()),
     createdAt: v.optional(v.number()),
     updatedAt: v.optional(v.number()),
   })
@@ -49,6 +50,12 @@ export default defineSchema({
     isApproved: v.boolean(),
     isOpen: v.boolean(),
     isActive: v.boolean(),
+    commissionRate: v.optional(v.number()),
+
+    bankName: v.optional(v.string()),
+    iban: v.optional(v.string()),
+    accountHolderName: v.optional(v.string()),
+    payoutInfoStatus: v.optional(v.string()),
 
     createdAt: v.number(),
     updatedAt: v.number(),
@@ -86,6 +93,12 @@ export default defineSchema({
 
     imageUrls: v.array(v.string()),
 
+    // "men" | "women" | "unisex" — used by gendered categories (e.g. watches)
+    gender: v.optional(v.string()),
+
+    // Accessory kind label — used by mobile accessories and similar categories
+    productType: v.optional(v.string()),
+
     price: v.number(),
     compareAtPrice: v.optional(v.number()),
     stockQuantity: v.optional(v.number()),
@@ -121,6 +134,10 @@ export default defineSchema({
     taxAmount: v.number(),
     discountAmount: v.number(),
     totalAmount: v.number(),
+
+    commissionRate: v.optional(v.number()),
+    commissionAmount: v.optional(v.number()),
+    storeAmount: v.optional(v.number()),
 
     currency: v.string(),
 
@@ -294,4 +311,108 @@ export default defineSchema({
   })
     .index("by_user", ["userId"])
     .index("by_token", ["token"]),
+
+  payouts: defineTable({
+    storeId: v.id("stores"),
+    amount: v.number(),
+    currency: v.string(),
+    status: v.string(),
+    orderCount: v.number(),
+    notes: v.optional(v.string()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+    paidAt: v.optional(v.number()),
+  })
+    .index("by_store", ["storeId"])
+    .index("by_status", ["status"]),
+
+  supportTickets: defineTable({
+    userId: v.id("users"),
+    orderId: v.optional(v.id("orders")),
+    storeId: v.optional(v.id("stores")),
+    subject: v.string(),
+    message: v.string(),
+    status: v.string(),
+    priority: v.string(),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_user", ["userId"])
+    .index("by_status", ["status"])
+    .index("by_order", ["orderId"])
+    .index("by_store", ["storeId"]),
+
+  helpArticles: defineTable({
+    slug: v.string(),
+    title: v.string(),
+    category: v.string(),
+    content: v.string(),
+    isPublished: v.boolean(),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_slug", ["slug"])
+    .index("by_category", ["category"]),
+
+  storeLeads: defineTable({
+    businessName: v.string(),
+    contactName: v.string(),
+    email: v.string(),
+    phone: v.optional(v.string()),
+    city: v.string(),
+    categoryIds: v.optional(v.array(v.id("categories"))),
+    message: v.optional(v.string()),
+    status: v.string(),
+    reviewNotes: v.optional(v.string()),
+    reviewedBy: v.optional(v.id("users")),
+    reviewedAt: v.optional(v.number()),
+    convertedUserId: v.optional(v.id("users")),
+    convertedStoreId: v.optional(v.id("stores")),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_email", ["email"])
+    .index("by_status", ["status"]),
+
+  celebrities: defineTable({
+    name: v.string(),
+    slug: v.string(),
+    title: v.optional(v.string()),
+    bio: v.optional(v.string()),
+    avatarUrl: v.optional(v.string()),
+    isVerified: v.boolean(),
+    isActive: v.boolean(),
+    sortOrder: v.number(),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_slug", ["slug"])
+    .index("by_active", ["isActive"]),
+
+  celebrityPicks: defineTable({
+    celebrityId: v.id("celebrities"),
+    productId: v.id("products"),
+    sortOrder: v.number(),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_celebrity", ["celebrityId"])
+    .index("by_celebrity_product", ["celebrityId", "productId"])
+    .index("by_product", ["productId"]),
+
+  customerAddresses: defineTable({
+    userId: v.id("users"),
+    label: v.string(),
+    fullName: v.string(),
+    phone: v.string(),
+    addressLine1: v.string(),
+    addressLine2: v.optional(v.string()),
+    city: v.string(),
+    area: v.optional(v.string()),
+    latitude: v.optional(v.number()),
+    longitude: v.optional(v.number()),
+    isDefault: v.boolean(),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  }).index("by_user", ["userId"]),
 });

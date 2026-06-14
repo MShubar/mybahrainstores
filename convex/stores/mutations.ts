@@ -12,6 +12,11 @@ import {
 import { requireStoreOwner } from "./permissions";
 import { recordAuditLog } from "../auditLogs/helpers";
 import { internal } from "../_generated/api";
+import {
+  assertValidBahrainIban,
+  assertValidPayoutInfoStatus,
+  normalizeIban,
+} from "./payoutInfoHelpers";
 
 const storeFields = {
   name: v.string(),
@@ -169,6 +174,137 @@ export const rejectStore = mutation({
       before: { isApproved: store.isApproved },
       after: { isApproved: false },
     });
+  },
+});
+
+export const updateStoreCommissionRate = mutation({
+  args: {
+    storeId: v.id("stores"),
+    commissionRate: v.union(v.number(), v.null()),
+  },
+  handler: async (ctx, args) => {
+    const user = await requireCurrentUser(ctx);
+    requireBackoffice(user);
+
+    const store = await ctx.db.get(args.storeId);
+    if (!store) {
+      throw new ConvexError("Store not found");
+    }
+
+    if (
+      args.commissionRate !== null &&
+      (!Number.isFinite(args.commissionRate) ||
+        args.commissionRate < 0 ||
+        args.commissionRate > 100)
+    ) {
+      throw new ConvexError("Commission rate must be between 0 and 100");
+    }
+
+    await ctx.db.patch(args.storeId, {
+      commissionRate: args.commissionRate ?? undefined,
+      updatedAt: now(),
+    });
+
+    await recordAuditLog(ctx, {
+      actorId: user._id,
+      action: "store_commission_rate_updated",
+      entity: "stores",
+      entityId: args.storeId,
+      before: { commissionRate: store.commissionRate ?? null },
+      after: { commissionRate: args.commissionRate },
+    });
+  },
+});
+
+export const updateMyStorePayoutInfo = mutation({
+  args: {
+    storeId: v.id("stores"),
+    bankName: v.string(),
+    iban: v.string(),
+    accountHolderName: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const user = await requireCurrentUser(ctx);
+    requireStore(user);
+
+    const store = await ctx.db.get(args.storeId);
+    if (!store) {
+      throw new ConvexError("Store not found");
+    }
+
+    requireStoreOwner(user, store);
+
+    const bankName = args.bankName.trim();
+    const accountHolderName = args.accountHolderName.trim();
+    const iban = normalizeIban(args.iban);
+
+    if (!bankName || !accountHolderName) {
+      throw new ConvexError("Bank name and account holder name are required");
+    }
+
+    assertValidBahrainIban(iban);
+
+    const timestamp = now();
+
+    await ctx.db.patch(args.storeId, {
+      bankName,
+      iban,
+      accountHolderName,
+      payoutInfoStatus: "pending",
+      updatedAt: timestamp,
+    });
+
+    await recordAuditLog(ctx, {
+      actorId: user._id,
+      action: "store_payout_info_submitted",
+      entity: "stores",
+      entityId: args.storeId,
+      after: { bankName, iban, payoutInfoStatus: "pending" },
+    });
+
+    return args.storeId;
+  },
+});
+
+export const updateStorePayoutInfoStatus = mutation({
+  args: {
+    storeId: v.id("stores"),
+    status: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const user = await requireCurrentUser(ctx);
+    requireBackoffice(user);
+
+    const store = await ctx.db.get(args.storeId);
+    if (!store) {
+      throw new ConvexError("Store not found");
+    }
+
+    await assertValidPayoutInfoStatus(ctx, args.status);
+
+    if (args.status === "approved") {
+      if (!store.bankName || !store.iban || !store.accountHolderName) {
+        throw new ConvexError("Store has not submitted payout information");
+      }
+    }
+
+    const timestamp = now();
+
+    await ctx.db.patch(args.storeId, {
+      payoutInfoStatus: args.status,
+      updatedAt: timestamp,
+    });
+
+    await recordAuditLog(ctx, {
+      actorId: user._id,
+      action: "store_payout_info_reviewed",
+      entity: "stores",
+      entityId: args.storeId,
+      before: { payoutInfoStatus: store.payoutInfoStatus ?? null },
+      after: { payoutInfoStatus: args.status },
+    });
+
+    return args.storeId;
   },
 });
 

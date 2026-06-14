@@ -6,6 +6,6 @@ dist
 .turbo
 *.tsbuildinfo
 .env
-.env.local
-.env.production
+.env.*
+!.env.example
 .DS_Store

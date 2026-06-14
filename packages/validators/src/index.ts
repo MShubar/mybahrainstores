@@ -1,4 +1,12 @@
 export {
+  createCustomerAddressSchema,
+  customerAddressFieldsSchema,
+  updateCustomerAddressSchema,
+  type CreateCustomerAddressInput,
+  type CustomerAddressFieldsInput,
+} from "./customerAddress";
+
+export {
   currencyCodeSchema,
   documentIdSchema,
   positiveAmountSchema,
@@ -8,9 +16,17 @@ export {
 } from "./common";
 
 export {
+  accountDeletionSchema,
+  emailVerificationSchema,
+  passwordResetRequestSchema,
+  passwordResetVerifySchema,
   signInEmailSchema,
   signUpSchema,
   updateProfileSchema,
+  type AccountDeletionInput,
+  type EmailVerificationInput,
+  type PasswordResetRequestInput,
+  type PasswordResetVerifyInput,
   type SignInEmailInput,
   type SignUpInput,
   type UpdateProfileInput,
@@ -56,7 +72,9 @@ export {
   getSettingByKeySchema,
   orderStatusesSettingValueSchema,
   paymentStatusesSettingValueSchema,
-  platformCommissionSettingValueSchema,
+  defaultCommissionRateSettingValueSchema,
+  payoutStatusesSettingValueSchema,
+  storeLeadStatusesSettingValueSchema,
   settingKeySchema,
   settingTypeSchema,
   taxPercentageSettingValueSchema,

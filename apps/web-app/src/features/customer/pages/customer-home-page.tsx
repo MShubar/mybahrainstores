@@ -1,37 +1,38 @@
-import { Link } from "react-router-dom";
 import { useQuery } from "convex/react";
 import { api } from "@convex/_generated/api";
+import { CategoryGrid } from "../components/category-grid";
+import { CelebritiesSection } from "../components/celebrities-section";
+import { CustomerHomeHeader } from "../components/customer-home-header";
+import { HomeProductSearch } from "../components/home-product-search";
+import { PromoBanner } from "../components/promo-banner";
 
 export function CustomerHomePage() {
   const categories = useQuery(api.categories.queries.listPublic);
+  const celebrities = useQuery(api.celebrities.queries.listPublic, { limit: 1 });
 
-  if (categories === undefined) {
-    return <div>Loading categories...</div>;
+  if (categories === undefined || celebrities === undefined) {
+    return (
+      <div className="flex min-h-[50vh] items-center justify-center text-gray-500">
+        Loading...
+      </div>
+    );
   }
 
+  const showCelebrities = celebrities.length > 0;
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-6">
+      <CustomerHomeHeader />
+
+      <HomeProductSearch categoryNames={categories.map((category) => category.name)} />
+
       <div>
-        <h1 className="text-3xl font-bold">Browse Categories</h1>
-        <p className="mt-1 text-gray-600">
-          Choose a category to find stores in Bahrain.
-        </p>
+        <h2 className="mb-3 px-4 text-[17px] font-bold text-gray-900">Categories</h2>
+        <CategoryGrid categories={categories} limit={8} />
       </div>
 
-      <div className="grid gap-4 md:grid-cols-3">
-        {categories.map((category) => (
-          <Link
-            key={category._id}
-            to={`/customer/categories/${category._id}`}
-            className="rounded-xl border bg-white p-5 shadow-sm hover:bg-gray-50"
-          >
-            <h2 className="text-lg font-semibold">{category.name}</h2>
-            <p className="mt-1 text-sm text-gray-600">
-              {category.description || "View stores"}
-            </p>
-          </Link>
-        ))}
-      </div>
+      {showCelebrities ? <CelebritiesSection /> : null}
+      {!showCelebrities ? <PromoBanner /> : null}
     </div>
   );
 }

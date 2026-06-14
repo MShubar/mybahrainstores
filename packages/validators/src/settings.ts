@@ -2,9 +2,17 @@ import { z } from "zod";
 
 export const settingKeySchema = z.enum([
   "currency",
+  "support_email",
+  "support_phone",
+  "business_hours",
+  "public_website_url",
   "tax_percentage",
   "default_delivery_fee",
-  "platform_commission_percentage",
+  "default_commission_rate",
+  "payout_statuses",
+  "default_payout_status",
+  "payout_info_statuses",
+  "default_payout_info_status",
   "order_statuses",
   "payment_statuses",
   "store_approval_required",
@@ -15,6 +23,10 @@ export const settingKeySchema = z.enum([
   "minimum_order_amount",
   "max_cart_items",
   "store_auto_approval",
+  "store_leads_enabled",
+  "store_lead_statuses",
+  "default_store_lead_status",
+  "enable_demo_accounts",
   "mock_payments_enabled",
 ]);
 
@@ -45,7 +57,15 @@ export const taxPercentageSettingValueSchema = z.number().finite().min(0).max(10
 
 export const deliveryFeeSettingValueSchema = z.number().finite().nonnegative();
 
-export const platformCommissionSettingValueSchema = z.number().finite().min(0).max(100);
+export const defaultCommissionRateSettingValueSchema = z.number().finite().min(0).max(100);
+
+export const payoutStatusesSettingValueSchema = z
+  .array(z.string().min(1).max(64))
+  .min(1);
+
+export const storeLeadStatusesSettingValueSchema = z
+  .array(z.string().min(1).max(64))
+  .min(1);
 
 export type SettingKey = z.infer<typeof settingKeySchema>;
 export type GetSettingByKeyInput = z.infer<typeof getSettingByKeySchema>;

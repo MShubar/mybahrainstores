@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useQuery } from "convex/react";
 import { api } from "@convex/_generated/api";
+import { summarizeOrderItems } from "../utils/order-item-summary";
 
 type OrderFilter = "active" | "completed" | "all";
 
@@ -76,7 +77,7 @@ export function CustomerOrdersPage() {
             to="/customer"
             className="mt-4 inline-block rounded bg-black px-4 py-2 text-white"
           >
-            Browse stores
+            Browse products
           </Link>
         </div>
       )}
@@ -97,7 +98,7 @@ export function CustomerOrdersPage() {
             <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
               <div className="min-w-0 flex-1">
                 <div className="text-sm text-gray-500">
-                  {order.storeName} · Order #{order._id.slice(-6)}
+                  {summarizeOrderItems(order.items)} · Order #{order._id.slice(-6)}
                 </div>
 
                 <div className="mt-1 text-lg font-semibold">

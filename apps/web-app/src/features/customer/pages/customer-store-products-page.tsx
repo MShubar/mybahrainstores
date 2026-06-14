@@ -63,6 +63,26 @@ export function CustomerStoreProductsPage() {
         return <div>Store not found.</div>;
     }
 
+    useEffect(() => {
+        if (trackedStoreId.current === store._id) {
+            return;
+        }
+
+        trackedStoreId.current = store._id;
+        void trackEvent("store_viewed", "store", store._id);
+    }, [store._id, trackEvent]);
+
+    useEffect(() => {
+        for (const product of products) {
+            if (trackedProductIds.current.has(product._id)) {
+                continue;
+            }
+
+            trackedProductIds.current.add(product._id);
+            void trackEvent("product_viewed", "product", product._id);
+        }
+    }, [products, trackEvent]);
+
     return (
         <div className="space-y-6">
             <div className="rounded-xl border bg-white p-5">

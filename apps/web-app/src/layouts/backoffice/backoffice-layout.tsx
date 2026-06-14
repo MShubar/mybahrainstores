@@ -1,17 +1,26 @@
 import { ReactNode } from "react";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { LogoutButton } from "../../features/auth/components/logout-button";
 
 export function BackofficeLayout({ children }: { children: ReactNode }) {
   const navItems = [
     { label: "Dashboard", to: "/backoffice" },
+    { label: "Launch Metrics", to: "/backoffice/launch-metrics" },
     { label: "Categories", to: "/backoffice/categories" },
     { label: "Stores", to: "/backoffice/stores" },
+    { label: "Store Leads", to: "/backoffice/store-leads" },
+    { label: "Celebrities", to: "/backoffice/celebrities" },
+    { label: "Products", to: "/backoffice/products" },
     { label: "Products", to: "/backoffice/products" },
     { label: "Settings", to: "/backoffice/settings" },
     { label: "Users", to: "/backoffice/users" },
     { label: "Orders", to: "/backoffice/orders" },
+    { label: "Payouts", to: "/backoffice/payouts" },
+    { label: "Support", to: "/backoffice/support" },
+    { label: "Revenue Reports", to: "/backoffice/reports/revenue" },
     { label: "Audit Logs", to: "/backoffice/audit-logs" },
+    { label: "Monitoring", to: "/backoffice/monitoring" },
+    { label: "Analytics", to: "/backoffice/analytics" },
     { label: "Monitoring", to: "/backoffice/monitoring" },
     { label: "Analytics", to: "/backoffice/analytics" },
   ];
@@ -42,7 +51,10 @@ export function BackofficeLayout({ children }: { children: ReactNode }) {
       </aside>
 
       <main className="flex-1">
-        <header className="flex justify-end border-b bg-white p-4">
+        <header className="flex items-center justify-end gap-3 border-b bg-white p-4">
+          <Link to="/account" className="text-sm underline">
+            Account
+          </Link>
           <LogoutButton />
         </header>
 

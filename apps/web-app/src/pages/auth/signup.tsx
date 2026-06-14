@@ -3,6 +3,7 @@ import { useMutation } from "convex/react";
 import { useAuthActions } from "@convex-dev/auth/react";
 import { useNavigate } from "react-router-dom";
 import { api } from "@convex/_generated/api";
+import { getAuthErrorMessage } from "../../features/auth/utils/get-auth-error-message";
 import { useTrackEvent } from "../../features/analytics/hooks/use-track-event";
 
 type Role = "customer" | "store";
@@ -46,7 +47,7 @@ export function SignupPage() {
       navigate(role === "store" ? "/store" : "/customer");
     } catch (err) {
       console.error(err);
-      setError(err instanceof Error ? err.message : "Signup failed");
+      setError(getAuthErrorMessage(err, "Signup failed"));
     } finally {
       setLoading(false);
     }

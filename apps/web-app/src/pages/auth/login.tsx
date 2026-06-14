@@ -1,26 +1,17 @@
 import { useEffect, useState } from "react";
-import { useQuery } from "convex/react";
+import { useConvex, useQuery } from "convex/react";
 import { useAuthActions } from "@convex-dev/auth/react";
 import { Link, useNavigate } from "react-router-dom";
 import { api } from "@convex/_generated/api";
-import type { UserRole } from "@my-bahrain/types";
-
-function homeForRole(role: UserRole): string {
-  if (role === "backoffice") {
-    return "/backoffice";
-  }
-
-  if (role === "store") {
-    return "/store";
-  }
-
-  return "/customer";
-}
+import { getAuthErrorMessage } from "../../features/auth/utils/get-auth-error-message";
+import { homeForRole } from "../../features/auth/utils/home-for-role";
 
 export function LoginPage() {
   const navigate = useNavigate();
+  const convex = useConvex();
   const { signIn } = useAuthActions();
   const user = useQuery(api.users.queries.me);
+  const demoAccess = useQuery(api.demo.queries.getPublicDemoAccess);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -45,7 +36,7 @@ export function LoginPage() {
         flow: "signIn",
       });
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Login failed");
+      setError(getAuthErrorMessage(err, "Login failed"));
     } finally {
       setLoading(false);
     }
@@ -87,11 +78,24 @@ export function LoginPage() {
       </button>
 
       <p className="text-center text-sm text-gray-600">
+        <Link to="/forgot-password" className="underline">
+          Forgot password?
+        </Link>
+      </p>
+
+      <p className="text-center text-sm text-gray-600">
         No account?{" "}
         <Link to="/signup" className="underline">
           Sign up
         </Link>
       </p>
+
+      {demoAccess?.enabled ? (
+        <div className="rounded border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
+          <strong>Demo store:</strong> {demoAccess.email} / {demoAccess.password}
+          <div className="mt-1 text-xs">Changes may be reset periodically.</div>
+        </div>
+      ) : null}
     </form>
   );
 }

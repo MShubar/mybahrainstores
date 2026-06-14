@@ -55,6 +55,7 @@ export function StoreDashboardPage() {
   const [loading, setLoading] = useState(false);
   const stats = useQuery(api.stores.queries.getMyStoreDashboardStats);
   const revenueStats = useQuery(api.orders.queries.getMyStoreRevenueStats);
+  const payoutData = useQuery(api.payouts.queries.listMyStorePayouts);
 
   if (myStore && hydratedStoreId !== myStore._id) {
     setHydratedStoreId(myStore._id);
@@ -163,30 +164,70 @@ export function StoreDashboardPage() {
 {revenueStats && (
   <div className="grid gap-4 md:grid-cols-4">
     <div className="rounded-xl border bg-white p-4">
-      <div className="text-sm text-gray-500">Revenue</div>
+      <div className="text-sm text-gray-500">Gross revenue</div>
       <div className="mt-2 text-2xl font-bold">
-        {revenueStats.totalRevenue.toFixed(3)} BHD
+        {revenueStats.grossRevenue.toFixed(3)} BHD
       </div>
     </div>
 
     <div className="rounded-xl border bg-white p-4">
-      <div className="text-sm text-gray-500">Paid Orders</div>
+      <div className="text-sm text-gray-500">Commission paid</div>
+      <div className="mt-2 text-2xl font-bold">
+        {revenueStats.commissionPaid.toFixed(3)} BHD
+      </div>
+    </div>
+
+    <div className="rounded-xl border bg-white p-4">
+      <div className="text-sm text-gray-500">Net earnings</div>
+      <div className="mt-2 text-2xl font-bold">
+        {revenueStats.netEarnings.toFixed(3)} BHD
+      </div>
+    </div>
+
+    <div className="rounded-xl border bg-white p-4">
+      <div className="text-sm text-gray-500">Paid orders</div>
       <div className="mt-2 text-2xl font-bold">{revenueStats.paidOrders}</div>
     </div>
+  </div>
+)}
 
-    <div className="rounded-xl border bg-white p-4">
-      <div className="text-sm text-gray-500">Pending Orders</div>
-      <div className="mt-2 text-2xl font-bold">
-        {revenueStats.pendingOrders}
-      </div>
-    </div>
+{payoutData && (
+  <div className="rounded-xl border bg-white p-5">
+    <h2 className="text-lg font-semibold">Payouts</h2>
+    <p className="mt-1 text-sm text-gray-600">
+      Commission rate:{" "}
+      {payoutData.store.commissionRate !== null
+        ? `${payoutData.store.commissionRate}%`
+        : "Platform default"}
+      . Amount owed: {payoutData.balance.amountOwed.toFixed(3)} BHD
+    </p>
 
-    <div className="rounded-xl border bg-white p-4">
-      <div className="text-sm text-gray-500">Delivered</div>
-      <div className="mt-2 text-2xl font-bold">
-        {revenueStats.deliveredOrders}
-      </div>
-    </div>
+    {payoutData.payouts.length === 0 ? (
+      <p className="mt-4 text-sm text-gray-500">No payouts recorded yet.</p>
+    ) : (
+      <table className="mt-4 w-full text-left text-sm">
+        <thead className="border-b">
+          <tr>
+            <th className="py-2">Date</th>
+            <th className="py-2">Amount</th>
+            <th className="py-2">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {payoutData.payouts.map((payout) => (
+            <tr key={payout._id} className="border-b">
+              <td className="py-2">
+                {new Date(payout.createdAt).toLocaleDateString()}
+              </td>
+              <td className="py-2">
+                {payout.amount.toFixed(3)} {payout.currency}
+              </td>
+              <td className="py-2">{payout.status}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    )}
   </div>
 )}
 <div className="flex flex-wrap gap-3">
@@ -196,6 +237,10 @@ export function StoreDashboardPage() {
 
   <Link to="/store/orders" className="rounded border px-4 py-2">
     View Orders
+  </Link>
+
+  <Link to="/store/payout-settings" className="rounded border px-4 py-2">
+    Payout Information
   </Link>
 </div>
       <form onSubmit={onSubmit} className="rounded-xl border bg-white p-5">

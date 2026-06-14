@@ -16,9 +16,11 @@ export function CheckoutPage() {
   const [phone, setPhone] = useState("");
   const [addressLine1, setAddressLine1] = useState("");
   const [addressLine2, setAddressLine2] = useState("");
-  const [city, setCity] = useState("Manama");
+  const [city, setCity] = useState("");
   const [area, setArea] = useState("");
   const [customerNotes, setCustomerNotes] = useState("");
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const [prefilledFromAddressId, setPrefilledFromAddressId] = useState<string | null>(null);
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
